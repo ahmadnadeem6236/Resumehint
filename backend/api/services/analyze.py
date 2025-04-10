@@ -51,13 +51,75 @@ class AnalyzeResume:
            ### Resume:
            {resume_data}
 
-            Cover letter should not be more than 300 words.
+            Email should not be more than 300 words.
             It should be in three paragraph.
-            ### Cover letter (NO PREAMBLE):
+            ### Email (NO PREAMBLE):
 
             """
         )
         chain_email = prompt_email | self.llm
+        res = chain_email.invoke(
+            {"job_description": str(job), "resume_data": str(resume)}
+        )
+        return res.content
+
+    def write_coverLetter(self, job, resume):
+        prompt_coverLetter = PromptTemplate.from_template(
+            """
+            ### JOB DESCRIPTION:
+            {job_description}
+
+            ### INSTRUCTION:
+           Write a professional cover letter from the job_description including the resume details:
+
+           ### Resume:
+           {resume_data}
+
+            Cover letter should not be more than 300 words.
+            It should be in three paragraph.
+            ### Email (NO PREAMBLE):
+
+            """
+        )
+        chain_email = prompt_coverLetter | self.llm
+        res = chain_email.invoke(
+            {"job_description": str(job), "resume_data": str(resume)}
+        )
+        return res.content
+
+    def analyze_job_description(self, job, resume):
+        prompt_analyze = PromptTemplate.from_template(
+            """
+
+            ### INSTRUCTION:
+            Analyze this job description and provide a detailed response with the following sections:
+            1. Key Skills Required
+            2. Experience Level
+            3. Match Analysis with current resume
+            4. Suggestions for Improvement
+
+            ### JOB DESCRIPTION:
+            {job_description}
+
+            ### Resume:
+            {resume_data}
+
+            Generate the the response in json with four key sections.
+            # Expected output Structure:
+            '''
+            
+            {{"KeySkills"}}: ["React", "JavaScript","Python"],
+            {{"ExperienceLevel"}}: 1,
+            {{"Analysis"}}: "The chances of you getting this job is high",
+            {{"Suggestions"}}: ["Improve Communication", "React", "System Design"]
+           
+            '''
+
+            ### Only return raw JSON, no explanations.(NO PREAMBLE):
+
+            """
+        )
+        chain_email = prompt_analyze | self.llm
         res = chain_email.invoke(
             {"job_description": str(job), "resume_data": str(resume)}
         )
