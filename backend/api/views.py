@@ -125,3 +125,51 @@ class AnalyzeJobViewSet(viewsets.ViewSet):
 
             parsed = json.loads(json_str)
             return Response(parsed)
+
+
+class AnalyzeResumeViewSet(viewsets.ViewSet):
+    def list(self, request):
+        job = JobDescription.objects.last()
+        job_des = job.description
+
+        resume = Resume.objects.last()
+        pdf = resume.resume.path
+        extracted_text = extract_pdf_text(pdf)
+        resume_data = extracted_text.replace("\n", "")
+        print("job_des", job_des)
+        print("resume_data", resume_data)
+
+        analyze = AnalyzeResume()
+        data = analyze.analyze_resume(job=job_des, resume=resume_data)
+        match = re.search(r"{.*}", data, re.DOTALL)
+        if match:
+            json_str = match.group()
+            json_str = json_str.replace("'", '"')
+
+            parsed = json.loads(json_str)
+            return Response(parsed)
+
+
+class PrepViewSet(viewsets.ViewSet):
+    def list(self, request):
+        job = JobDescription.objects.last()
+        job_des = job.description
+
+        resume = Resume.objects.last()
+        pdf = resume.resume.path
+        extracted_text = extract_pdf_text(pdf)
+        resume_data = extracted_text.replace("\n", "")
+        print("job_des", job_des)
+        print("resume_data", resume_data)
+
+        analyze = AnalyzeResume()
+        data = analyze.generate_job_interview_qa(
+            job=job_des, resume=resume_data
+        )
+        match = re.search(r"{.*}", data, re.DOTALL)
+        if match:
+            json_str = match.group()
+            json_str = json_str.replace("'", '"')
+
+            parsed = json.loads(json_str)
+            return Response(parsed)
