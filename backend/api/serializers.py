@@ -2,19 +2,19 @@
 from rest_framework import serializers
 
 # import model from models.py
-from .models import JobDescription, Resume
+from .models import JobResume
 
 
 # Create a model serializer
-class ResumeSerializer(serializers.ModelSerializer):
+class JobResumeSerializer(serializers.ModelSerializer):
     # specify model and fields
     class Meta:
-        model = Resume
+        model = JobResume
         fields = "__all__"
 
 
-class JobDescriptionSerializer(serializers.ModelSerializer):
-    # specify model and fields
-    class Meta:
-        model = JobDescription
-        fields = "__all__"
+# class JobDescriptionSerializer(serializers.ModelSerializer):
+#     # specify model and fields
+#     class Meta:
+#         model = JobDescription
+#         fields = "__all__"

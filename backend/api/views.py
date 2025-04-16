@@ -7,28 +7,19 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 # import models
-from .models import JobDescription, Resume
+from .models import JobResume
 
 # import local data
-from .serializers import JobDescriptionSerializer, ResumeSerializer
+from .serializers import JobResumeSerializer
 from .services.analyze import AnalyzeResume
 
 # import services
 from .services.pdf_services import clean_json_with_regex, extract_pdf_text
 
 
-# create a viewset
-class JobDescriptionViewSet(viewsets.ModelViewSet):
-    # define queryset
-    queryset = JobDescription.objects.all()
-
-    # specify serializer to be used
-    serializer_class = JobDescriptionSerializer
-
-
-class ResumeViewSet(viewsets.ModelViewSet):
-    queryset = Resume.objects.all()
-    serializer_class = ResumeSerializer
+class JobResumeViewSet(viewsets.ModelViewSet):
+    queryset = JobResume.objects.all()
+    serializer_class = JobResumeSerializer
 
 
 # @api_view(["GET"])
@@ -61,10 +52,10 @@ class ResumeViewSet(viewsets.ModelViewSet):
 
 class GetResumeViewSet(viewsets.ViewSet):
     def list(self, request):
-        resume = Resume.objects.last()
+        resume = JobResume.objects.last().resume.path
         # serializer = ResumeSerializer(resume)
         # data = serializer.data
-        pdf = resume.resume.path
+        pdf = resume
         extracted_text = extract_pdf_text(pdf)
         return Response({"text": extracted_text.replace("\n", "")})
 
@@ -72,11 +63,11 @@ class GetResumeViewSet(viewsets.ViewSet):
 class EmailViewSet(viewsets.ViewSet):
     def list(self, request):
         try:
-            job = JobDescription.objects.last()
-            job_des = job.description
+            job = JobResume.objects.last().description
+            job_des = job
 
-            resume = Resume.objects.last()
-            pdf = resume.resume.path
+            resume = JobResume.objects.last().resume.path
+            pdf = resume
             extracted_text = extract_pdf_text(pdf)
             resume_data = extracted_text.replace("\n", "")
             print("job_des", job_des)
@@ -93,11 +84,11 @@ class EmailViewSet(viewsets.ViewSet):
 class CoverLetterViewSet(viewsets.ViewSet):
     def list(self, request):
         try:
-            job = JobDescription.objects.last()
-            job_des = job.description
+            job = JobResume.objects.last().description
+            job_des = job
 
-            resume = Resume.objects.last()
-            pdf = resume.resume.path
+            resume = JobResume.objects.last().resume.path
+            pdf = resume
             extracted_text = extract_pdf_text(pdf)
             resume_data = extracted_text.replace("\n", "")
 
@@ -110,8 +101,8 @@ class CoverLetterViewSet(viewsets.ViewSet):
 
 class AnalyzeJobViewSet(viewsets.ViewSet):
     def list(self, request):
-        job = JobDescription.objects.last()
-        job_des = job.description
+        job = JobResume.objects.last().description
+        job_des = job
 
         analyze = AnalyzeResume()
         raw_result = analyze.analyze_job_description(job_des)
@@ -136,11 +127,11 @@ class AnalyzeJobViewSet(viewsets.ViewSet):
 
 class AnalyzeResumeViewSet(viewsets.ViewSet):
     def list(self, request):
-        job = JobDescription.objects.last()
-        job_des = job.description
+        job = JobResume.objects.last().description
+        job_des = job
 
-        resume = Resume.objects.last()
-        pdf = resume.resume.path
+        resume = JobResume.objects.last().resume.path
+        pdf = resume
         extracted_text = extract_pdf_text(pdf)
         resume_data = extracted_text.replace("\n", "")
 
@@ -167,11 +158,11 @@ class AnalyzeResumeViewSet(viewsets.ViewSet):
 
 class PrepViewSet(viewsets.ViewSet):
     def list(self, request):
-        job = JobDescription.objects.last()
-        job_des = job.description
+        job = JobResume.objects.last().description
+        job_des = job
 
-        resume = Resume.objects.last()
-        pdf = resume.resume.path
+        resume = JobResume.objects.last().resume.path
+        pdf = resume
         extracted_text = extract_pdf_text(pdf)
         resume_data = extracted_text.replace("\n", "")
         analyzer = AnalyzeResume()

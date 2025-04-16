@@ -168,18 +168,22 @@ class AnalyzeResume:
 
     def write_mail(self, job, resume):
         prompt = f"""
-        ### JOB DESCRIPTION:
-        {job}
 
-        ### INSTRUCTION:
-        Write a professional cold email from the job_description including the resume details:
-
-        ### Resume:
+        ### RESUME:
         {resume}
 
-        Email should not be more than 300 words.
-        It should be in three paragraphs.
-        
+        ### INSTRUCTION:
+        Generate a catchy yet professional subject line for my job application email from the job_description. 
+        The subject line should highlight my unique selling points, such as my [specific skills] and [years of experience], and 
+        encourage the hiring manager to open and read the email. Include the details from my resume:
+
+
+        ### Job Description:
+        {job}
+
+        ###IMPORTANT
+        - Include only mail part 
+
         ### Email (NO PREAMBLE):
         """
 
@@ -187,12 +191,12 @@ class AnalyzeResume:
             model=self.model,
             messages=[
                 {
-                    "role": "Employer",
-                    "content": "You are applying for the job, Write professional email to the company",
+                    "role": "system",
+                    "content": "I am applying for the job, Write professional email to the company",
                 },
                 {"role": "user", "content": prompt},
             ],
-            temperature=0.7,  # A bit higher temperature for more creative writing
+            temperature=0.5,  # A bit higher temperature for more creative writing
         )
 
         return response.choices[0].message.content
@@ -203,12 +207,14 @@ class AnalyzeResume:
         {job}
 
         ### INSTRUCTION:
-        Write a professional cover letter from the job_description including the resume details:
+        Write a detailed cover letter for a [job position] at [company]. 
+        Start with a brief introduction about my interest in the role and the company. Highlight my key achievements in [specific skill] and how my previous experience at [previous job] has prepared me for this position. 
+        Emphasize why I would be a great fit for the company's culture and goals, and conclude by expressing my eagerness for an interview.
 
         ### Resume:
         {resume}
 
-        Cover letter should not be more than 300 words.
+        Cover letter should not be more than 400 words.
         It should be in three paragraphs.
         
         ### Cover Letter (NO PREAMBLE):
