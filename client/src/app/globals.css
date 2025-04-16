@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@config "../../tailwind.config.js";
 
-@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
@@ -119,4 +119,11 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+.resume-drop-zone {
+  @apply border-2 border-dashed rounded-xl p-8 transition-all duration-200 ease-in-out;
+}
+
+.resume-drop-zone.active {
+  @apply border-primary bg-primary/5;
 }
