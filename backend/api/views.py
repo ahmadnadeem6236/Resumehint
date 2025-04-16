@@ -1,5 +1,6 @@
 import json
-import re
+
+from django.http import JsonResponse
 
 # import viewsets
 from rest_framework import viewsets
@@ -13,7 +14,7 @@ from .serializers import JobDescriptionSerializer, ResumeSerializer
 from .services.analyze import AnalyzeResume
 
 # import services
-from .services.pdf_services import extract_pdf_text
+from .services.pdf_services import clean_json_with_regex, extract_pdf_text
 
 
 # create a viewset
@@ -70,38 +71,41 @@ class GetResumeViewSet(viewsets.ViewSet):
 
 class EmailViewSet(viewsets.ViewSet):
     def list(self, request):
-        job = JobDescription.objects.last()
-        job_des = job.description
+        try:
+            job = JobDescription.objects.last()
+            job_des = job.description
 
-        resume = Resume.objects.last()
-        pdf = resume.resume.path
-        extracted_text = extract_pdf_text(pdf)
-        resume_data = extracted_text.replace("\n", "")
-        print("job_des", job_des)
-        print("resume_data", resume_data)
+            resume = Resume.objects.last()
+            pdf = resume.resume.path
+            extracted_text = extract_pdf_text(pdf)
+            resume_data = extracted_text.replace("\n", "")
+            print("job_des", job_des)
+            print("resume_data", resume_data)
 
-        analyze = AnalyzeResume()
-        data = analyze.write_mail(job=job_des, resume=resume_data)
-        if data:
-            return Response({"genrated_mail": data})
+            analyze = AnalyzeResume()
+            data = analyze.write_mail(job=job_des, resume=resume_data)
+            return JsonResponse({"email": data})
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
 
 
 class CoverLetterViewSet(viewsets.ViewSet):
     def list(self, request):
-        job = JobDescription.objects.last()
-        job_des = job.description
+        try:
+            job = JobDescription.objects.last()
+            job_des = job.description
 
-        resume = Resume.objects.last()
-        pdf = resume.resume.path
-        extracted_text = extract_pdf_text(pdf)
-        resume_data = extracted_text.replace("\n", "")
-        print("job_des", job_des)
-        print("resume_data", resume_data)
+            resume = Resume.objects.last()
+            pdf = resume.resume.path
+            extracted_text = extract_pdf_text(pdf)
+            resume_data = extracted_text.replace("\n", "")
 
-        analyze = AnalyzeResume()
-        data = analyze.write_coverLetter(job=job_des, resume=resume_data)
-        if data:
-            return Response({"genrated_mail": data})
+            analyze = AnalyzeResume()
+            data = analyze.write_coverLetter(job=job_des, resume=resume_data)
+            return JsonResponse({"cover_letter": data})
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
 
 
 class AnalyzeJobViewSet(viewsets.ViewSet):
@@ -109,22 +113,25 @@ class AnalyzeJobViewSet(viewsets.ViewSet):
         job = JobDescription.objects.last()
         job_des = job.description
 
-        resume = Resume.objects.last()
-        pdf = resume.resume.path
-        extracted_text = extract_pdf_text(pdf)
-        resume_data = extracted_text.replace("\n", "")
-        print("job_des", job_des)
-        print("resume_data", resume_data)
-
         analyze = AnalyzeResume()
-        data = analyze.analyze_job_description(job=job_des, resume=resume_data)
-        match = re.search(r"{.*}", data, re.DOTALL)
-        if match:
-            json_str = match.group()
-            json_str = json_str.replace("'", '"')
+        raw_result = analyze.analyze_job_description(job_des)
 
-            parsed = json.loads(json_str)
-            return Response(parsed)
+        cleaned_result = clean_json_with_regex(raw_result)
+        try:
+            json_data = json.loads(cleaned_result)
+            return JsonResponse(json_data)
+        except json.JSONDecodeError as e:
+            return JsonResponse(
+                {
+                    "error": f"Failed to parse JSON response: {str(e)}",
+                    "raw_response": raw_result,
+                    "cleaned_response": cleaned_result,
+                },
+                status=500,
+            )
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
 
 
 class AnalyzeResumeViewSet(viewsets.ViewSet):
@@ -136,18 +143,26 @@ class AnalyzeResumeViewSet(viewsets.ViewSet):
         pdf = resume.resume.path
         extracted_text = extract_pdf_text(pdf)
         resume_data = extracted_text.replace("\n", "")
-        print("job_des", job_des)
-        print("resume_data", resume_data)
 
         analyze = AnalyzeResume()
-        data = analyze.analyze_resume(job=job_des, resume=resume_data)
-        match = re.search(r"{.*}", data, re.DOTALL)
-        if match:
-            json_str = match.group()
-            json_str = json_str.replace("'", '"')
+        raw_result = analyze.analyze_resume(job=job_des, resume=resume_data)
 
-            parsed = json.loads(json_str)
-            return Response(parsed)
+        cleaned_result = clean_json_with_regex(raw_result)
+        try:
+            json_data = json.loads(cleaned_result)
+            return JsonResponse(json_data)
+        except json.JSONDecodeError as e:
+            return JsonResponse(
+                {
+                    "error": f"Failed to parse JSON response: {str(e)}",
+                    "raw_response": raw_result,
+                    "cleaned_response": cleaned_result,
+                },
+                status=500,
+            )
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
 
 
 class PrepViewSet(viewsets.ViewSet):
@@ -159,17 +174,23 @@ class PrepViewSet(viewsets.ViewSet):
         pdf = resume.resume.path
         extracted_text = extract_pdf_text(pdf)
         resume_data = extracted_text.replace("\n", "")
-        print("job_des", job_des)
-        print("resume_data", resume_data)
+        analyzer = AnalyzeResume()
 
-        analyze = AnalyzeResume()
-        data = analyze.generate_job_interview_qa(
-            job=job_des, resume=resume_data
-        )
-        match = re.search(r"{.*}", data, re.DOTALL)
-        if match:
-            json_str = match.group()
-            json_str = json_str.replace("'", '"')
+        raw_result = analyzer.generate_job_interview_qa(resume_data, job_des)
+        print(raw_result)
+        cleaned_result = clean_json_with_regex(raw_result)
+        try:
+            json_data = json.loads(cleaned_result)
+            return JsonResponse(json_data)
+        except json.JSONDecodeError as e:
+            return JsonResponse(
+                {
+                    "error": f"Failed to parse JSON response: {str(e)}",
+                    "raw_response": raw_result,
+                    "cleaned_response": cleaned_result,
+                },
+                status=500,
+            )
 
-            parsed = json.loads(json_str)
-            return Response(parsed)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
