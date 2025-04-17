@@ -12,10 +12,7 @@ interface ResumeScoreProps {
   missingKeywords: string[];
   suggestions: {
     category: string;
-    items: {
-      title: string;
-      description: string;
-    }[];
+    items: [];
   }[];
   isLoading: boolean;
 }
@@ -277,7 +274,7 @@ const ResumeScore: React.FC<ResumeScoreProps> = ({
               <div className="space-y-6">
                 {suggestions.map((category, idx) => (
                   <div key={idx} className="space-y-3">
-                    <h3 className="text-sm font-medium text-gray-700">
+                    <h3 className="text-lg font-medium text-gray-900">
                       {category.category}
                     </h3>
 
@@ -286,14 +283,15 @@ const ResumeScore: React.FC<ResumeScoreProps> = ({
                         key={itemIdx}
                         className="bg-white overflow-hidden border border-gray-200"
                       >
-                        <div className="p-4">
-                          <div className="flex justify-between items-start mb-2">
+                        <div className="p-2 pl-3">
+                          {/* <div className="flex justify-between items-start mb-2">
                             <h4 className="text-sm font-medium text-gray-900">
                               {item.title}
-                            </h4>
-                          </div>
-                          <p className="text-sm text-gray-600">
-                            {item.description}
+                            {/* </h4>
+                          </div> */}
+                          <p className="text-sm text-gray-600 font-medium flex items-center">
+                            <AlertCircle className="h-3 w-3 text-brand-400 mr-2" />
+                            {item}
                           </p>
                         </div>
                       </Card>

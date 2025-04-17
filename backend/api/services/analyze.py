@@ -1,6 +1,8 @@
 import os
 
 from dotenv import load_dotenv
+from langchain_core.prompts import PromptTemplate
+from langchain_groq import ChatGroq
 from openai import OpenAI
 
 load_dotenv()
@@ -8,11 +10,11 @@ load_dotenv()
 
 class AnalyzeResume:
     def __init__(self):
-        # self.llm = ChatGroq(
-        #     temperature=0,
-        #     groq_api_key=os.getenv("GROQ"),
-        #     model_name="llama-3.3-70b-versatile",
-        # )
+        self.llm = ChatGroq(
+            temperature=0,
+            groq_api_key=os.getenv("GROQ"),
+            model_name="llama-3.3-70b-versatile",
+        )
         # self.llm = ChatOpenAI(
         #     openai_api_key=os.getenv("OPENROUTER_API_KEY"),
         #     openai_api_base=os.getenv("OPENROUTER_BASE_URL"),
@@ -167,39 +169,26 @@ class AnalyzeResume:
         return response.choices[0].message.content
 
     def write_mail(self, job, resume):
-        prompt = f"""
+        prompt_email = PromptTemplate.from_template(
+            """
+            ### JOB DESCRIPTION:
+            {job_description}
 
-        ### RESUME:
-        {resume}
+            ### INSTRUCTION:
+            Write a professional email from the job_description including the details from the resume:
 
-        ### INSTRUCTION:
-        Generate a catchy yet professional subject line for my job application email from the job_description. 
-        The subject line should highlight my unique selling points, such as my [specific skills] and [years of experience], and 
-        encourage the hiring manager to open and read the email. Include the details from my resume:
+            ### RESUME
+            {resume}
 
+            ### Cover letter (NO PREAMBLE):
 
-        ### Job Description:
-        {job}
-
-        ###IMPORTANT
-        - Include only mail part 
-
-        ### Email (NO PREAMBLE):
-        """
-
-        response = self.client.chat.completions.create(
-            model=self.model,
-            messages=[
-                {
-                    "role": "system",
-                    "content": "I am applying for the job, Write professional email to the company",
-                },
-                {"role": "user", "content": prompt},
-            ],
-            temperature=0.5,  # A bit higher temperature for more creative writing
+            """
         )
-
-        return response.choices[0].message.content
+        chain_email = prompt_email | self.llm
+        res = chain_email.invoke(
+            {"job_description": str(job), "resume": str(resume)}
+        )
+        return res.content
 
     def write_coverLetter(self, job, resume):
         prompt = f"""

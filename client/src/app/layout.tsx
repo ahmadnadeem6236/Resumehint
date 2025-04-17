@@ -27,7 +27,7 @@ export default function RootLayout({
           <main className="flex-1 container mx-auto px-4 sm:px-6 py-8">
             {children}
           </main>
-          <Toaster />
+          <Toaster richColors />
         </div>
       </body>
     </html>

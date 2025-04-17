@@ -8,6 +8,7 @@ import {
   LetterText,
   FileChartColumn,
   FileChartLine,
+  FileQuestion,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -39,10 +40,10 @@ export default function Navbar() {
           </Link>
 
           <Link
-            href="/emails"
+            href="/email"
             className={cn(
               "flex items-center space-x-1 text-sm font-medium transition-colors hover:text-brand-600",
-              isActive("/emails") ? "text-brand-600" : "text-gray-600"
+              isActive("/email") ? "text-brand-600" : "text-gray-600"
             )}
           >
             <Send className="h-4 w-4" />
@@ -50,10 +51,10 @@ export default function Navbar() {
           </Link>
 
           <Link
-            href="/emails"
+            href="/coverletter"
             className={cn(
               "flex items-center space-x-1 text-sm font-medium transition-colors hover:text-brand-600",
-              isActive("/emails") ? "text-brand-600" : "text-gray-600"
+              isActive("/coverletter") ? "text-brand-600" : "text-gray-600"
             )}
           >
             <LetterText className="h-4 w-4" />
@@ -61,14 +62,24 @@ export default function Navbar() {
           </Link>
 
           <Link
-            href="/emails"
+            href="/jobanalyze"
             className={cn(
               "flex items-center space-x-1 text-sm font-medium transition-colors hover:text-brand-600",
-              isActive("/emails") ? "text-brand-600" : "text-gray-600"
+              isActive("/jobanalyze") ? "text-brand-600" : "text-gray-600"
             )}
           >
             <FileChartLine className="h-4 w-4" />
             <span>Job Analyze</span>
+          </Link>
+          <Link
+            href="/prep"
+            className={cn(
+              "flex items-center space-x-1 text-sm font-medium transition-colors hover:text-brand-600",
+              isActive("/prep") ? "text-brand-600" : "text-gray-600"
+            )}
+          >
+            <FileQuestion className="h-4 w-4" />
+            <span>Preparation QA</span>
           </Link>
         </nav>
 

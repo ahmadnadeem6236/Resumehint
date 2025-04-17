@@ -14,12 +14,18 @@ export default function Home() {
   const [jobDescription, setJobDescription] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [analysisComplete, setAnalysisComplete] = useState(false);
+  const [localData, setLocalData] = useState({
+    ATS_Score: 0,
+    SkillsMatched: [],
+    KeywordsMissing: [],
+    Suggestions: [],
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!resume || !jobDescription) {
-      toast("Please upload a resume and provide a job description.");
+      toast.warning("Please upload a resume and provide a job description.");
       return;
     }
 
@@ -44,17 +50,40 @@ export default function Home() {
       );
 
       if (response.status == 201) {
-        toast("Submission successful!");
+        toast.success("Submission successful!");
       } else {
         const errorData = await response.data;
-        toast(`Error: ${errorData.message}`);
+        toast.warning(`Error: ${errorData.message}`);
       }
     } catch (error) {
       console.error("Error uploading files:", error);
-      toast("An error occurred while uploading the files.");
+      toast.warning("An error occurred while uploading the files.");
     }
     setIsLoading(false);
+    handleAnalyzeResume();
+    setAnalysisComplete(true);
   };
+
+  const handleAnalyzeResume = async () => {
+    setIsLoading(true); // Set loading state to true at the start
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/api/analyze-resume/"
+      );
+      const result = response.data;
+
+      // Update localData with the fetched result
+      setLocalData(result);
+      console.log("Analysis data:", localData);
+      toast.success("Resume analysis completed successfully!");
+      setAnalysisComplete(true);
+    } catch (error) {
+      console.error("Error analyzing resume:", error);
+    } finally {
+      setIsLoading(false); // Ensure loading state is reset
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8 text-center">
@@ -67,7 +96,15 @@ export default function Home() {
         </p>
       </div>
       {analysisComplete ? (
-        "job"
+        <>
+          <ResumeScore
+            score={localData.ATS_Score}
+            missingKeywords={localData.KeywordsMissing}
+            matchedKeywords={localData.SkillsMatched}
+            suggestions={localData.Suggestions}
+            isLoading={isLoading}
+          />
+        </>
       ) : (
         <form onSubmit={handleSubmit}>
           <Card className="w-full">
