@@ -4,6 +4,7 @@ from django.http import JsonResponse
 
 # import viewsets
 from rest_framework import viewsets
+from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 
 # import models
@@ -100,15 +101,20 @@ class CoverLetterViewSet(viewsets.ViewSet):
 
 
 class AnalyzeJobViewSet(viewsets.ViewSet):
-    def list(self, request):
-        job = JobResume.objects.last().description
-        job_des = job
+    parser_classes = [JSONParser]
 
-        analyze = AnalyzeResume()
-        raw_result = analyze.analyze_job_description(job_des)
-
-        cleaned_result = clean_json_with_regex(raw_result)
+    def create(self, request):
         try:
+            job_data = request.data.get("job")
+            if not job_data:
+                return JsonResponse(
+                    {"error": "No job data provided"}, status=400
+                )
+
+            analyze = AnalyzeResume()
+            raw_result = analyze.analyze_job_description(job_data)
+
+            cleaned_result = clean_json_with_regex(raw_result)
             json_data = json.loads(cleaned_result)
             return JsonResponse(json_data)
         except json.JSONDecodeError as e:

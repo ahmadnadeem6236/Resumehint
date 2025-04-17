@@ -13,12 +13,12 @@ import { ScrollArea } from "./ui/scroll-area";
 import { toast } from "sonner";
 
 interface MailgenProps {
-  generated_mail: string;
+  generated_coverletter: string;
   isLoading: boolean;
 }
 
-const GeneratedEmail: React.FC<MailgenProps> = ({
-  generated_mail,
+const GeneratedCoverLetter: React.FC<MailgenProps> = ({
+  generated_coverletter,
   isLoading,
 }) => {
   if (isLoading) {
@@ -53,15 +53,15 @@ const GeneratedEmail: React.FC<MailgenProps> = ({
       <CardContent className="">
         <ScrollArea className="h-52 w-full ">
           <div className="text-[16px] text-gray-900">
-            <Markdown>{generated_mail}</Markdown>
+            <Markdown>{generated_coverletter}</Markdown>
           </div>
         </ScrollArea>
       </CardContent>
       <Button
         variant="outline"
-        className="md:w-28 h-10 absolute md:bottom-85 md:right-52 right-10 bottom-80 bg-white hover:bg-gray-100 text-gray-900 border-gray-300 shadow-sm"
+        className="md:w-28 h-10 absolute md:bottom-80 md:right-52 right-10 bottom-80 bg-white hover:bg-gray-100 text-gray-900 border-gray-300 shadow-sm"
         onClick={() => {
-          navigator.clipboard.writeText(generated_mail);
+          navigator.clipboard.writeText(generated_coverletter);
           toast.success("Email copied to clipboard!");
         }}
       >
@@ -72,4 +72,4 @@ const GeneratedEmail: React.FC<MailgenProps> = ({
   );
 };
 
-export default GeneratedEmail;
+export default GeneratedCoverLetter;

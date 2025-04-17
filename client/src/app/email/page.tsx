@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -11,29 +11,6 @@ import GeneratedEmail from "@/components/GeneratatedEmail";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-
-// Mock data - in a real app, this would come from your backend
-const tempEmail = `I hope this email finds you well. My name is [Your Name], and I'm a frontend developer with experience in [key technologies]. I came across your profile on LinkedIn and was impressed by your work at [Their Company], particularly your contributions to [specific project or achievement].
-
-I'm reaching out because I'm currently exploring new opportunities in frontend development, and I admire the work being done at [Their Company]. I'd love to connect briefly to learn more about your experience and any insights you might have about the industry or company culture.
-
-Would you be open to a 15-minute virtual coffee chat in the coming weeks? I'd greatly appreciate the opportunity to learn from your experience.
-
-Thank you for considering my request. I look forward to potentially connecting with you.
-Thank you for considering my request. I look forward to potentially connecting with you.
-Thank you for considering my request. I look forward to potentially connecting with you.
-Thank you for considering my request. I look forward to potentially connecting with you.
-Thank you for considering my request. I look forward to potentially connecting with you.
-Thank you for considering my request. I look forward to potentially connecting with you.
-Thank you for considering my request. I look forward to potentially connecting with you.
-Thank you for considering my request. I look forward to potentially connecting with you.
-Thank you for considering my request. I look forward to potentially connecting with you.
-Thank you for considering my request. I look forward to potentially connecting with you.
-
-Best regards,
-[Your Name]
-[Your LinkedIn Profile]
-[Your Portfolio Website]`;
 
 export default function page() {
   const [isLoading, setIsLoading] = useState(true);
@@ -85,8 +62,7 @@ export default function page() {
               <span className="text-brand-600 mr-2 font-bold">•</span>
               <span>
                 <span className="font-medium">Personalize each template</span>{" "}
-                before sending by replacing all bracketed placeholders with
-                relevant information.
+                before sending check for space and line breaks.
               </span>
             </li>
             <li className="flex items-start">

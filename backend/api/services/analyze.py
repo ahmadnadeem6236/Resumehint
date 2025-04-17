@@ -216,14 +216,17 @@ class AnalyzeResume:
         prompt = f"""
         ### INSTRUCTION:
         Please analyze the following job description and provide detailed insights on:
-        1. Key responsibilities and expectations of the role
-        2. Required technical skills and experience
-        3. Soft skills and personal qualities sought
-        4. Company culture indicators based on language used
-        5. Potential red flags or warning signs (if any)
-        6. Job level and career advancement potential
-        7. Recommended qualifications or experiences to highlight in an application
-        8. Suggested questions to ask during an interview to learn more about the position
+        - Extract the company name if present. 
+        - Extract the Role.
+        - Extract the Job Type.
+        - Salary, if mentioned.
+        - Key responsibilities and expectations of the role
+        - Required technical skills and experience
+        - Soft skills and personal qualities sought
+        - Company culture indicators based on language used
+        - Potential red flags or warning signs (if any)
+        - Job level and career advancement potential
+        - Recommended qualifications or experiences to highlight in an application
         
         ### JOB DESCRIPTION:
         {job_description}
@@ -232,6 +235,10 @@ class AnalyzeResume:
         
         Format your response as JSON with the following structure:
         {{
+            "Company": "Company",
+            "Role": "Frontend Developer",
+            "JobType": "Full-time"
+            "Salary": "$100k-$150k"
             "KeyResponsibilities": ["Responsibility 1", "Responsibility 2", ...],
             "TechnicalSkills": ["Skill 1", "Skill 2", ...],
             "SoftSkills": ["Soft skill 1", "Soft skill 2", ...],
@@ -240,7 +247,6 @@ class AnalyzeResume:
             "JobLevel": "Analysis of job level and seniority...",
             "CareerAdvancement": "Insights on potential career growth...",
             "RecommendedQualifications": ["Qualification 1", "Qualification 2", ...],
-            "SuggestedQuestions": ["Question 1?", "Question 2?", ...]
         }}
         
         ### IMPORTANT:
