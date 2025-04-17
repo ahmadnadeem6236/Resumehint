@@ -172,14 +172,16 @@ export default function page() {
           </ul>
 
           <div>
-            <Button
-              className="min-w-64 h-10 mt-3 flex items-center justify-center bg-brand-600 hover:bg-brand-700"
-              onClick={handleGenerateQuestions}
-            >
-              {isLoading
-                ? "Generating Questions..."
-                : "Generate Interview Questions"}
-            </Button>
+            {!questionsGenerated && (
+              <Button
+                className="min-w-64 h-10 mt-3 flex items-center justify-center bg-brand-600 hover:bg-brand-700"
+                onClick={handleGenerateQuestions}
+              >
+                {isLoading
+                  ? "Generating Questions..."
+                  : "Generate Interview Questions"}
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
