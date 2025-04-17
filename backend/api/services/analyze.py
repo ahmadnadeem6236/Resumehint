@@ -180,7 +180,7 @@ class AnalyzeResume:
             ### RESUME
             {resume}
 
-            ### Cover letter (NO PREAMBLE):
+            ### Email (NO PREAMBLE):
 
             """
         )
@@ -191,37 +191,26 @@ class AnalyzeResume:
         return res.content
 
     def write_coverLetter(self, job, resume):
-        prompt = f"""
-        ### JOB DESCRIPTION:
-        {job}
+        prompt_email = PromptTemplate.from_template(
+            """
+            ### JOB DESCRIPTION:
+            {job_description}
 
-        ### INSTRUCTION:
-        Write a detailed cover letter for a [job position] at [company]. 
-        Start with a brief introduction about my interest in the role and the company. Highlight my key achievements in [specific skill] and how my previous experience at [previous job] has prepared me for this position. 
-        Emphasize why I would be a great fit for the company's culture and goals, and conclude by expressing my eagerness for an interview.
+            ### INSTRUCTION:
+            Write a professional cover letter from the job_description including the details from the resume:
 
-        ### Resume:
-        {resume}
+            ### RESUME
+            {resume}
 
-        Cover letter should not be more than 400 words.
-        It should be in three paragraphs.
-        
-        ### Cover Letter (NO PREAMBLE):
-        """
+            ### Cover letter (NO PREAMBLE):
 
-        response = self.client.chat.completions.create(
-            model=self.model,
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are a professional cover letter writer for job applications.",
-                },
-                {"role": "user", "content": prompt},
-            ],
-            temperature=0.7,  # A bit higher temperature for more creative writing
+            """
         )
-
-        return response.choices[0].message.content
+        chain_email = prompt_email | self.llm
+        res = chain_email.invoke(
+            {"job_description": str(job), "resume": str(resume)}
+        )
+        return res.content
 
     def analyze_job_description(self, job_description):
         prompt = f"""
