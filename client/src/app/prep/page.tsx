@@ -11,15 +11,7 @@ import axios from "axios";
 export default function page() {
   const [isLoading, setIsLoading] = useState(false);
   const [questionsGenerated, setQuestionsGenerated] = useState(false);
-  const [localData, setLocalData] = useState<
-    Array<{
-      category: string;
-      questions: Array<{
-        question: string;
-        answer: string;
-      }>;
-    }>
-  >([]);
+  const [localData, setLocalData] = useState<any[]>([]);
 
   // Mock data - in a real app, this would come from the backend
   const mockQuestions: Array<{
@@ -107,8 +99,8 @@ export default function page() {
     setIsLoading(true);
     try {
       const response = await axios.get("http://localhost:8000/api/prep/");
-      setLocalData([...response.data.questions]);
       console.log("api", response.data);
+      setLocalData(response.data.questions);
       console.log(localData);
 
       // Simulate successful generation
@@ -117,6 +109,7 @@ export default function page() {
       toast.success("Questions generated successfully!");
     } catch (error) {
       toast.warning("Generation failed");
+      console.log("error", error);
     } finally {
       setIsLoading(false);
     }

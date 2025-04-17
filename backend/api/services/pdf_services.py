@@ -18,7 +18,8 @@ def clean_json_with_regex(raw_json_str):
     Returns the cleaned JSON string.
     """
     # First try: Remove complete markdown code block
-    pattern1 = r"^```(?:json)?[\r\n]+(.*?)```$"
+
+    pattern1 = r"^“```(?:json)?[\r\n]+(.*?)```$"
     match1 = re.search(pattern1, raw_json_str, flags=re.DOTALL)
     if match1:
         return match1.group(1).strip()

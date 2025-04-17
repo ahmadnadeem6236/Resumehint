@@ -174,8 +174,8 @@ class PrepViewSet(viewsets.ViewSet):
         analyzer = AnalyzeResume()
 
         raw_result = analyzer.generate_job_interview_qa(resume_data, job_des)
-        print(raw_result)
         cleaned_result = clean_json_with_regex(raw_result)
+        print(cleaned_result)
         try:
             json_data = json.loads(cleaned_result)
             return JsonResponse(json_data)
