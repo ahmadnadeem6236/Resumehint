@@ -31,7 +31,8 @@ class AnalyzeResume:
         prompt = f"""
             ### INSTRUCTION:
             Based on the following job description and resume, generate 10 interview questions that are likely to be asked during a job interview. 
-            For each question, also generate a strong, customized answer based on the candidate's resume.
+            For each question, also generate a strong, customized answer based on the candidate's resume. Create in categories as Technical Skills,
+            Problem Solving, and Behavioral Questions.
 
             Focus areas:
             - Technical and role-specific questions
@@ -46,17 +47,30 @@ class AnalyzeResume:
 
             Format your response in JSON like below:
             {{
-                "InterviewPrep": [
-                    {{
-                        "Question": "What experience do you have with React?",
-                        "Answer": "In my previous role at XYZ Corp, I led the development of a customer dashboard using React."
-                    }},
-                    {{
-                        "Question": "Tell me about a challenging project you worked on.",
-                        "Answer": "At ABC Company, I was tasked with optimizing database performance for our main product."
-                    }}
-                    // Include 10 more similar question-answer pairs
+                [
+                    "category": "Technical Skill" 
+                    "questions": [
+                        {{
+                            "question": "What experience do you have with React?",
+                            "answer": "In my previous role at XYZ Corp, I led the development of a customer dashboard using React."
+                        }},
+                    ]
+                    "category": "Problem Solving"
+                    "questions": [
+                        {{
+                            "question": "Tell me about a challenging technical problem you've solved recently.",
+                            "answer": "Recently, I encountered a performance issue in a data visualization component that was rendering thousands of elements. After profiling, I identified that unnecessary re-renders were happening with every data update. I implemented memo, useCallback, and virtualization techniques to only render visible elements, which improved performance by 80% and significantly enhanced the user experience.",
+                        }}
+                    ]
+                    "category": "Behavioral Questions"
+                    "questions": [
+                        {{
+                            question: "Describe a situation where you had to work under tight deadlines.",
+                            answer: "For a product launch, we had an unexpected requirement change three weeks before release. I worked with stakeholders to prioritize features, created a detailed implementation plan, and coordinated with team members to distribute tasks efficiently. I focused on high-impact features first and implemented a continuous integration pipeline to catch issues early. We successfully launched on time with all critical features completed.",
+                        }}
+                    ]
                 ]
+                // Include 10 more similar question-answer pairs
             }}
 
             IMPORTANT: Return ONLY valid JSON with no additional text. Ensure all quotes and brackets are properly balanced.
