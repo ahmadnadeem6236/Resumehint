@@ -1,4 +1,4 @@
-import { FileText } from "lucide-react";
+import { Briefcase, FileText } from "lucide-react";
 import { Textarea } from "./ui/textarea";
 
 interface JobDescriptionProps {
@@ -18,7 +18,7 @@ const JobDescription: React.FC<JobDescriptionProps> = ({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
-        <FileText />
+        <Briefcase className="text-brand-600 w-5 h-5 ml-2" />
         <h3 className="text-lg font-semibold">Job Description</h3>
       </div>
       <Textarea

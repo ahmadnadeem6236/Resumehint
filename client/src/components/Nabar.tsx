@@ -9,6 +9,7 @@ import {
   FileChartColumn,
   FileChartLine,
   FileQuestion,
+  Briefcase,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -68,7 +69,7 @@ export default function Navbar() {
               isActive("/jobanalyze") ? "text-brand-600" : "text-gray-600"
             )}
           >
-            <FileChartLine className="h-4 w-4" />
+            <Briefcase className="h-4 w-4" />
             <span>Job Analyze</span>
           </Link>
           <Link

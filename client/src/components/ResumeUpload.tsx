@@ -69,7 +69,7 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({ onFileUpload }) => {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2">
-        <Upload size={24} />
+        <Upload className="text-brand-600 w-5 h-5 ml-2" />
         <h3 className="text-lg font-semibold">Upload Resume</h3>
       </div>
       <div
