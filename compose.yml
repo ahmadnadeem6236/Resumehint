@@ -19,47 +19,36 @@ services:
       timeout: 5s
       retries: 5
 
-  # migration:
-  #   container_name: migration
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile.dev
-  #   command: python manage.py migrate
-  #   environment:
-  #     - DB_NAME=resumehint
-  #     - DB_USER=postgres
-  #     - DB_PASSWORD=password
-  #     - DB_HOST=db
-  #     - DB_PORT=5432
-  #   networks:
-  #     - app-network
-  #   depends_on:
-  #     db:
-  #       condition: service_healthy
-  #
-  # api:
-  #   container_name: api
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile.dev
-  #   ports:
-  #     - "8000:8000"
-  #   volumes:
-  #     - ./backend:/app
-  #   networks:
-  #     - app-network
-  #   environment:
-  #     - DB_NAME=resumehint
-  #     - DB_USER=postgres
-  #     - DB_PASSWORD=password
-  #     - DB_HOST=db
-  #     - DB_PORT=5432
-  #
-  #   depends_on:
-  #     db:
-  #       condition: service_healthy
-  #     migration:
-  #       condition: service_completed_successfully
+  migration:
+    container_name: migration
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    command: python manage.py migrate
+    env_file: ".env"
+    networks:
+      - app-network
+    depends_on:
+      db:
+        condition: service_healthy
+
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    networks:
+      - app-network
+    env_file: ".env"
+    depends_on:
+      db:
+        condition: service_healthy
+      migration:
+        condition: service_completed_successfully
 
 networks:
   app-network:
