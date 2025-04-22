@@ -59,7 +59,7 @@ const GeneratedEmail: React.FC<MailgenProps> = ({
       </CardContent>
       <Button
         variant="outline"
-        className="md:w-28 h-10 absolute md:bottom-85 md:right-52 right-10 bottom-80 bg-white hover:bg-gray-100 text-gray-900 border-gray-300 shadow-sm"
+        className="md:w-28 h-10 absolute md:bottom-85 md:right-72 right-10 bottom-80 bg-white hover:bg-gray-100 text-gray-900 border-gray-300 shadow-sm"
         onClick={() => {
           navigator.clipboard.writeText(generated_mail);
           toast.success("Email copied to clipboard!");
