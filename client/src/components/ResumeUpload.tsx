@@ -39,7 +39,7 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({ onFileUpload }) => {
       file.type !== "application/pdf" &&
       file.type !== "application/msword" &&
       file.type !==
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ) {
       toast("Invalid file type", {
         description: "Please upload a PDF or Word document.",
@@ -77,9 +77,8 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({ onFileUpload }) => {
         onDragOver={handleDrag}
         onDragLeave={handleDrag}
         onDrop={handleDrop}
-        className={`resume-drop-zone flex justify-center ${
-          dragActive ? "active" : ""
-        } ${resumeFile ? "border-success border-opacity-50 " : " "}`}
+        className={`resume-drop-zone flex justify-center ${dragActive ? "active" : ""
+          } ${resumeFile ? "border-success border-opacity-50 " : " "}`}
       >
         <Button type="button" variant="outline" size="sm" className="relative">
           {resumeFile ? (
@@ -87,7 +86,7 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({ onFileUpload }) => {
               Selected file: {resumeFile.name}
             </p>
           ) : (
-            <p>Brwose File</p>
+            <p>Browse File</p>
           )}
           <Input
             type="file"
